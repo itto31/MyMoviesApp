@@ -1,22 +1,25 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
-import React from 'react';
+import React, { useState } from 'react';
 import { View,SafeAreaView,StatusBar,Image, StyleSheet } from 'react-native';
-import { Input, Text,Button,FormControl, useToast} from 'native-base';
 import logoApp from '../assets/Logo.png';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import {signInApi} from '../api/auth';
 import { TOKEN } from '../../src/utils/constant';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {HelperText,TextInput,Surface ,Button,Text,Dialog} from 'react-native-paper';
 
 
 export default function Login(props) {
     const { setRefreshCheckLogin } = props;
-    const toast = useToast();
-    const setDate = async () => {
+    const [visible, setVisible] = useState(false);
+    const [message, setMessage] = useState('')
+    const hideDialog = () => setVisible(false);
+
+    const setDate = async (token) => {
         try {
-            await AsyncStorage.setItem(TOKEN, 'token');
+            await AsyncStorage.setItem(TOKEN, token);
         } catch (error) {
             console.log(error);
         }
@@ -31,11 +34,10 @@ export default function Login(props) {
         onSubmit: (formValue) => {
             signInApi(formValue).then(response =>{
                 if (response.message){
-                    toast.show({
-                        description: response.message,
-                      });
+                    setVisible(true);
+                    setMessage(response.message);
                 } else {
-                setDate();
+                setDate(response.token);
                 setRefreshCheckLogin(true);
                 }
             }).catch((error) =>{
@@ -51,41 +53,45 @@ export default function Login(props) {
     <View>
     <Image source={logoApp}resizeMode="contain" style={styles.logo}/>
     </View>
-    <FormControl onSubmit={formik.handleSubmit}>
+    <Surface onSubmit={formik.handleSubmit}>
 
-    <FormControl>
-    <Input  placeholder="Email"
+    <TextInput  placeholder="Email"
     placeholderTextColor="#fff"
     style={[{color:'#fff'}, formik.errors.email && styles.error]}
-    variant="underlined"
+    mode="flat"
     value={formik.values.name}
     name= "email"
     onChangeText={formik.handleChange('email')}
     />
-    <FormControl.HelperText>
+    <HelperText type="error">
     {formik.errors.email}
-    </FormControl.HelperText>
-     </FormControl>
+    </HelperText>
 
-
-    <FormControl isRequired>
-    <Input  placeholder="Password"
+    <TextInput  placeholder="Password"
     placeholderTextColor="#fff"
+    secureTextEntry
     style={[{color:'#fff'}, formik.errors.password && styles.error]}
-    variant="underlined"
-    type="password"
+    mode="flat"
     name= "password"
     value={formik.values.name}
     onChangeText={formik.handleChange('password')}
     />
-    <FormControl.HelperText>
+    <HelperText type="error">
     {formik.errors.password}
-    </FormControl.HelperText>
-    </FormControl>
-    </FormControl>
+    </HelperText>
+    </Surface>
      <Button style={styles.btnLogin} onPress={formik.handleSubmit}>
         <Text>Login</Text>
     </Button>
+    <Dialog visible={visible} onDismiss={hideDialog}>
+                    <Dialog.Title>Alert</Dialog.Title>
+                    <Dialog.Content>
+                        <Text>{message}</Text>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+              <Button onPress={hideDialog}>Done</Button>
+            </Dialog.Actions>
+                    </Dialog>
     </SafeAreaView>
   );
 }
