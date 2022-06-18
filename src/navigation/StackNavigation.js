@@ -26,7 +26,7 @@ export default function StackNavigation() {
 
       <Stack.Screen name="Home" component={Home} options={{title:'MyMovieAPP',headerRight:()=>buttonRight()}} />
 
-      <Stack.Screen name="Details" component={Details} options={{headerRight:()=>buttonRight()}}  />
+      <Stack.Screen name="Details" component={Details} options={{headerRight:()=>buttonRight(),headerTransparent:true}}  />
 
       <Stack.Screen name="Search" component={Search}  />
     </Stack.Navigator>

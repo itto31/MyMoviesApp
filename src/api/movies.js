@@ -23,3 +23,15 @@ export function getMovieById(id) {
       return result;
     });
 }
+
+export function getSimilarMovies(id) {
+  const url = `${API_MOVIE}/movie/${id}/similar?api_key=${API_KEY}&language=${LANG}`;
+
+  return fetch(url)
+    .then((respose) => {
+      return respose.json();
+    })
+    .then((result) => {
+      return result;
+    });
+}

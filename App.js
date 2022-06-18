@@ -6,8 +6,13 @@ import { TOKEN } from './src/utils/constant';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import StackNavigation from './src/navigation/StackNavigation';
-import { StatusBar } from 'react-native';
+import { LogBox, StatusBar } from 'react-native';
 import { navigationRef } from './src/navigation/RootNavigarion';
+LogBox.ignoreLogs([
+  'ViewPropTypes will be removed',
+  'ColorPropType will be removed',
+]);
+
 export default function App() {
   const [userName, setUserName] = useState(null);
   const [isLoading, setIsLoading] = useState(false);

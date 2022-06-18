@@ -16,6 +16,7 @@ export default function Home(props) {
     const [showBtnMore, setShowBtnMore] = useState(true);
     const [page, setPage] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
+    
     useEffect(() => {
        getPopularMovies(page).then(response =>{
         const totalPages = response.total_pages;
