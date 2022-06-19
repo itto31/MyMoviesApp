@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, ScrollView,  Image, TouchableWithoutFeedback} from 'react-native';
-import {Button, Text, Title} from 'react-native-paper';
+import { StyleSheet, View, ScrollView, TouchableWithoutFeedback, Alert, BackHandler} from 'react-native';
+import {Button, Card, Paragraph, Text} from 'react-native-paper';
 import {getPopularMovies} from '../api/movies';
 import { map } from 'lodash';
 import {IMAGEPATH} from '../utils/constant';
@@ -11,12 +11,32 @@ import starDark from '../assets/starDark.png';
 import LottieView from 'lottie-react-native';
 
 export default function Home(props) {
-  const {navigation} = props;
+  const {navigation,} = props;
     const [movies, setMovies] = useState(null);
     const [showBtnMore, setShowBtnMore] = useState(true);
     const [page, setPage] = useState(1);
-    const [isLoading, setIsLoading] = useState(false);
-    
+  
+
+    useEffect(() => {
+      navigation.addListener('beforeRemove', (e) => {
+      e.preventDefault();
+      Alert.alert(
+        'Are you sure?',
+        'Do you want to exit?',
+        [
+          { text: "Cancel", style: 'cancel', onPress: () => {} },
+          {
+            text: 'Close',
+            style: 'destructive',
+            onPress: () => (BackHandler.exitApp()),
+          },
+        ]
+      );
+      });
+    }, [navigation]);
+
+
+
     useEffect(() => {
        getPopularMovies(page).then(response =>{
         const totalPages = response.total_pages;
@@ -31,11 +51,11 @@ export default function Home(props) {
         }
        });
     }, [page]);
-    
+
     return (
      movies ? (
       <ScrollView >
-      
+
             {map(movies, (movie, index) =>(
               <Movie key={index} movie={movie} navigation={navigation}/>
             ))}
@@ -51,36 +71,34 @@ export default function Home(props) {
                 Load More
             </Button>)}
       </ScrollView>
-      ):(
+      ) : (
         <LottieView source={require('../assets/98432-loading.json')} autoPlay loop />
       )
-  
   );
 
 }
 function Movie(props){
   const {movie,navigation} = props;
   const {id,poster_path, title, release_date,overview, vote_count, vote_average} = movie;
-  
-  const goMovie= () => {
+
+  const goMovie = () => {
     navigation.navigate('Details', {id});
   };
   return (
     <TouchableWithoutFeedback onPress={goMovie}>
-    <View style={styles.movies}>
-      <View style={styles.left}>
-        <Image style={styles.image}
-        source={poster_path ? {
+    <Card style={styles.movies} mode="Contained">
+    <Card.Title title={title}/>
+    <Card.Content>
+    <Card.Cover style={styles.image} source={poster_path ? {
           uri: `${IMAGEPATH}${poster_path}`,
-        } : NOIMAGE }/>
-        </View>
-        <View>
-        <Title>{title}</Title>
-        <Text>{release_date}</Text>
-        <Text>{overview}</Text>
+        } : NOIMAGE } />
+        <View >
+        <Text style={styles.release}>{release_date}</Text>
+        <Paragraph style={styles.overview}>{overview}</Paragraph>
         <MovieRating vote_count={vote_count} vote_average={vote_average}/>
-      </View>
-    </View>
+        </View>
+    </Card.Content>
+    </Card>
     </TouchableWithoutFeedback>
 );
 }
@@ -104,19 +122,22 @@ function MovieRating(props){
 
 const styles = StyleSheet.create({
   movies:{
-    marginTop: 5,
-    marginBottom:20,
-    marginHorizontal: 10,
-    flexDirection:'row',
-    alignItems:'center',
+
+    backgroundColor: '#192734',
     borderBottomWidth:2,
-  },
-  left:{
-    marginRight:10,
+
   },
    image:{
-    width:100,
-    height:150,
+   borderRadius: 10,
+   },release:{
+    color: '#fff',
+    fontSize: 12,
+    marginTop: 5,
+   },
+   overview:{
+    marginTop:5,
+    color:'#8697a5',
+    fontSize: 15,
    },
    viewRating:{
     alignItems: 'flex-start',

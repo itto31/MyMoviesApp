@@ -36,8 +36,8 @@ export function getSimilarMovies(id) {
     });
 }
 
-export function getSearchMovie(movie, page = 1) {
-  const url = `${API_MOVIE}/search/movie/?api_key=${API_KEY}&language=${LANG}&query=${movie}`;
+export function getSearchMovie(movie) {
+  const url = `${API_MOVIE}/search/movie/?api_key=${API_KEY}&language=${LANG}&sort_by=popularity.asc&query=${movie}`;
 
   return fetch(url)
     .then((respone) => {

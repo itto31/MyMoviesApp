@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
-import React, { useState } from 'react';
-import { View,SafeAreaView,StatusBar,Image, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View,Image, StyleSheet, Alert, BackHandler } from 'react-native';
 import logoApp from '../assets/Logo.png';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -12,10 +12,33 @@ import {HelperText,TextInput,Surface ,Button,Text,Dialog} from 'react-native-pap
 
 
 export default function Login(props) {
-    const { setRefreshCheckLogin } = props;
+    const { setRefreshCheckLogin, navigation } = props;
     const [visible, setVisible] = useState(false);
     const [message, setMessage] = useState('')
     const hideDialog = () => setVisible(false);
+
+    useEffect(() => {
+        navigation.addListener('beforeRemove', (e) => {
+        e.preventDefault();
+        Alert.alert(
+          'Are you sure?',
+          'Do you want to exit?',
+          [
+            { text: "Cancel", style: 'cancel', onPress: () => {} },
+            {
+              text: 'Close',
+              style: 'destructive',
+              onPress: () => (BackHandler.exitApp()),
+            },
+          ]
+        );
+        });
+      }, [navigation]);
+  
+
+
+
+
 
     const setDate = async (token) => {
         try {
@@ -24,7 +47,6 @@ export default function Login(props) {
             console.log(error);
         }
     };
-
     const formik = useFormik({
         initialValues: initialFormValue(),
         validationSchema: Yup.object({
@@ -38,7 +60,7 @@ export default function Login(props) {
                     setMessage(response.message);
                 } else {
                 setDate(response.token);
-                setRefreshCheckLogin(true);
+                navigation.navigate('Home', { initial: 'Home' });
                 }
             }).catch((error) =>{
                 console.log(error);
@@ -48,9 +70,8 @@ export default function Login(props) {
 
 
   return (
-    <SafeAreaView style={styles.container}>
-    <StatusBar barStyle={'light-content'}/>
-    <View>
+    <View style={styles.container}> 
+    <View >
     <Image source={logoApp}resizeMode="contain" style={styles.logo}/>
     </View>
     <Surface onSubmit={formik.handleSubmit}>
@@ -58,7 +79,7 @@ export default function Login(props) {
     <TextInput  placeholder="Email"
     placeholderTextColor="#fff"
     style={[{color:'#fff'}, formik.errors.email && styles.error]}
-    mode="flat"
+    mode="flat  "
     value={formik.values.name}
     name= "email"
     onChangeText={formik.handleChange('email')}
@@ -92,7 +113,7 @@ export default function Login(props) {
               <Button onPress={hideDialog}>Done</Button>
             </Dialog.Actions>
                     </Dialog>
-    </SafeAreaView>
+    </View>
   );
 }
 
