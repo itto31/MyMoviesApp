@@ -33,7 +33,9 @@ export default function Home(props) {
     }, [page]);
     
     return (
+     movies ? (
       <ScrollView >
+      
             {map(movies, (movie, index) =>(
               <Movie key={index} movie={movie} navigation={navigation}/>
             ))}
@@ -49,6 +51,10 @@ export default function Home(props) {
                 Load More
             </Button>)}
       </ScrollView>
+      ):(
+        <LottieView source={require('../assets/98432-loading.json')} autoPlay loop />
+      )
+  
   );
 
 }

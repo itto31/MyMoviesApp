@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
@@ -23,6 +24,7 @@ export default function CarouselVertical(props) {
       setMovies(response.results);
     });
   }, []);
+  
   return movies ? (
     <Carousel
       layout={'default'}
@@ -32,11 +34,13 @@ export default function CarouselVertical(props) {
       itemWidth={ITEM_WIDTH}
     />
   ) : (
-    <LottieView
-      source={require('../assets/98432-loading.json')}
-      autoPlay
-      loop
-    />
+    <View>
+      <LottieView
+        source={require('../assets/98432-loading.json')}
+        autoPlay
+        loop
+      />
+    </View>
   );
 }
 

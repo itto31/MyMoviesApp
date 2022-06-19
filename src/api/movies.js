@@ -35,3 +35,15 @@ export function getSimilarMovies(id) {
       return result;
     });
 }
+
+export function getSearchMovie(movie, page = 1) {
+  const url = `${API_MOVIE}/search/movie/?api_key=${API_KEY}&language=${LANG}&query=${movie}`;
+
+  return fetch(url)
+    .then((respone) => {
+      return respone.json();
+    })
+    .then((result) => {
+      return result;
+    });
+}

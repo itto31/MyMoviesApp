@@ -28,7 +28,7 @@ export default function StackNavigation() {
 
       <Stack.Screen name="Details" component={Details} options={{headerRight:()=>buttonRight(),headerTransparent:true}}  />
 
-      <Stack.Screen name="Search" component={Search}  />
+      <Stack.Screen name="Search" component={Search}  options={{title:"",headerTransparent:true}}/>
     </Stack.Navigator>
   );
 }
