@@ -11,7 +11,7 @@ import starDark from '../assets/starDark.png';
 import LottieView from 'lottie-react-native';
 
 export default function Home(props) {
-  const {navigation,} = props;
+  const {navigation} = props;
     const [movies, setMovies] = useState(null);
     const [showBtnMore, setShowBtnMore] = useState(true);
     const [page, setPage] = useState(1);

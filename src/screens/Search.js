@@ -23,7 +23,7 @@ export default function Search(props) {
   const { Search } = route.params;
   const [movies, setMovies] = useState(null);
   const [search, setSearch] = useState(null);
-  const [title, setTitle] = useState(null)
+  const [title, setTitle] = useState(null);
 
     useEffect(() => {
       if (Search) {
@@ -31,7 +31,6 @@ export default function Search(props) {
         setTitle(Search);
       }
     }, [Search]);
- 
   useEffect(() => {
     if (size(search) > 2) {
       setTitle(search);
@@ -59,7 +58,7 @@ export default function Search(props) {
         </View>
       </ScrollView>
     </SafeAreaView>
-  ):(
+  ) : (
     <LottieView source={require('../assets/98432-loading.json')} autoPlay loop />
   )
   );
@@ -115,5 +114,5 @@ const styles = StyleSheet.create({
     color:'#fff',
     fontSize: 30,
     textAlign: 'center',
-  }
+  },
 });

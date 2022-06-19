@@ -1,5 +1,5 @@
-/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
+/* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
 import { View,Image, StyleSheet, Alert, BackHandler } from 'react-native';
 import logoApp from '../assets/Logo.png';
@@ -12,9 +12,9 @@ import {HelperText,TextInput,Surface ,Button,Text,Dialog} from 'react-native-pap
 
 
 export default function Login(props) {
-    const { setRefreshCheckLogin, navigation } = props;
+    const { navigation } = props;
     const [visible, setVisible] = useState(false);
-    const [message, setMessage] = useState('')
+    const [message, setMessage] = useState('');
     const hideDialog = () => setVisible(false);
 
     useEffect(() => {
@@ -24,7 +24,7 @@ export default function Login(props) {
           'Are you sure?',
           'Do you want to exit?',
           [
-            { text: "Cancel", style: 'cancel', onPress: () => {} },
+            { text: 'Cancel', style: 'cancel', onPress: () => {} },
             {
               text: 'Close',
               style: 'destructive',
@@ -34,7 +34,7 @@ export default function Login(props) {
         );
         });
       }, [navigation]);
-  
+
 
 
 
@@ -70,7 +70,7 @@ export default function Login(props) {
 
 
   return (
-    <View style={styles.container}> 
+    <View style={styles.container}>
     <View >
     <Image source={logoApp}resizeMode="contain" style={styles.logo}/>
     </View>
