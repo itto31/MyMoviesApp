@@ -15,7 +15,6 @@ export default function Home(props) {
     const [movies, setMovies] = useState(null);
     const [showBtnMore, setShowBtnMore] = useState(true);
     const [page, setPage] = useState(1);
-  
 
     useEffect(() => {
       navigation.addListener('beforeRemove', (e) => {
@@ -38,7 +37,7 @@ export default function Home(props) {
 
 
     useEffect(() => {
-       getPopularMovies(page).then(response =>{
+      getPopularMovies(page).then(response =>{
         const totalPages = response.total_pages;
         if (page < totalPages){
           if (!movies){
@@ -50,15 +49,17 @@ export default function Home(props) {
           setShowBtnMore(false);
         }
        });
+       
     }, [page]);
 
     return (
      movies ? (
+      <View>
       <ScrollView >
 
             {map(movies, (movie, index) =>(
               <Movie key={index} movie={movie} navigation={navigation}/>
-            ))}
+              ))}
             {showBtnMore && (
               <Button mode="contained"
               contentStyle={styles.loadMoreContainer}
@@ -71,6 +72,7 @@ export default function Home(props) {
                 Load More
             </Button>)}
       </ScrollView>
+  </View>
       ) : (
         <LottieView source={require('../assets/98432-loading.json')} autoPlay loop />
       )
@@ -92,11 +94,11 @@ function Movie(props){
     <Card.Cover style={styles.image} source={poster_path ? {
           uri: `${IMAGEPATH}${poster_path}`,
         } : NOIMAGE } />
-        <View >
-        <Text style={styles.release}>{release_date}</Text>
-        <Paragraph style={styles.overview}>{overview}</Paragraph>
-        <MovieRating vote_count={vote_count} vote_average={vote_average}/>
-        </View>
+    <View >
+    <Text style={styles.release}>{release_date}</Text>
+    <Paragraph style={styles.overview}>{overview}</Paragraph>
+    <MovieRating vote_count={vote_count} vote_average={vote_average}/>
+    </View>
     </Card.Content>
     </Card>
     </TouchableWithoutFeedback>
@@ -116,6 +118,7 @@ function MovieRating(props){
       imageSize={20}
       style={{marginRight: 15}}
       />
+       <Text style={{fontSize:16, marginRight:5}}>{media}</Text>
     </View>
   );
   }

@@ -1,9 +1,9 @@
 /* eslint-disable prettier/prettier */
-import { View, Image, StyleSheet, ScrollView,Text } from 'react-native';
+import { View, Image, StyleSheet, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { getMovieById } from '../api/movies';
 import { IMAGEPATH } from '../utils/constant.js';
-import { Button, Title } from 'react-native-paper';
+import { Title,Text } from 'react-native-paper';
 import {map} from 'lodash';
 import {Rating} from "react-native-ratings";
 import starDark from '../assets/starDark.png';

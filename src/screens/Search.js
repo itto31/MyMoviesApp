@@ -9,14 +9,15 @@ import {
   Dimensions,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { Text, Title } from 'react-native-paper';
+import { Card, Paragraph, Text, Title } from 'react-native-paper';
 import { getSearchMovie } from '../api/movies';
 import { Searchbar } from 'react-native-paper';
 import { size, map } from 'lodash';
 import { IMAGEPATH } from '../utils/constant';
 import LottieView from 'lottie-react-native';
-
-const { width } = Dimensions.get('window');
+import NOIMAGE from '../assets/default-imgage.png';
+import { Rating } from 'react-native-ratings';
+import starDark from '../assets/starDark.png';
 
 export default function Search(props) {
   const { navigation,route } = props;
@@ -50,8 +51,8 @@ export default function Search(props) {
         value={search}
         />
       <ScrollView>
-        <Title style={styles.title}>{title}</Title>
-        <View style={styles.container}>
+        <View>
+          <Text style={styles.title}>{title}</Text>
           {map(movies, (movie, index) => (
             <Movie key={index} movie={movie} navigation={navigation} />
             ))}
@@ -66,53 +67,82 @@ export default function Search(props) {
 
 function Movie(props) {
   const { movie, navigation } = props;
-  const { poster_path, title, id } = movie;
+  const { poster_path, title, id,release_date,overview,vote_count,vote_average } = movie;
 
   const goMovie = () => {
     navigation.navigate('Details', { id });
   };
   return (
     <TouchableWithoutFeedback onPress={goMovie}>
-      <View style={styles.movie}>
-        {poster_path ? (
-          <Image
-            style={styles.image}
-            source={{ uri: `${IMAGEPATH}/${poster_path}` }}
-          />
-        ) : (
-          <Text>{title}</Text>
-        )}
+       <Card style={styles.movies} mode="Contained">
+       <Card.Title title={title} />
+       <Card.Content>
+       <Card.Cover style={styles.image} source={poster_path ? {
+          uri: `${IMAGEPATH}${poster_path}`,
+        } : NOIMAGE } />
+      <View >
+      <Text style={styles.release}>{release_date}</Text>
+      <Paragraph style={styles.overview}>{overview}</Paragraph>
+        <MovieRating vote_count={vote_count} vote_average={vote_average}/>
       </View>
+      </Card.Content>
+      </Card>
     </TouchableWithoutFeedback>
   );
 }
+
+function MovieRating(props){
+  const {vote_average} = props;
+  const media = vote_average / 2;
+  return (
+    <View style={styles.viewRating}>
+      <Rating type="custom"
+      ratingImage={starDark}
+      ratingColor="#ffc205"
+      ratingBackgroundColor="#192734"
+      startingValue={media}
+      imageSize={20}
+      style={{marginRight: 15}}
+      />
+       <Text style={{fontSize:16, marginRight:5}}>{media}</Text>
+    </View>
+  );
+  }
 
 const styles = StyleSheet.create({
   input: {
     marginTop: 3,
     backgroundColor: '#15212b',
   },
-  container: {
-    borderTopWidth: 5,
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+  movies:{
+    backgroundColor: '#192734',
+    borderBottomWidth:2,
   },
-  movie: {
-    width: width / 2,
-    height: 300,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-  },
+   image:{
+   borderRadius: 10,
+   },release:{
+    color: '#fff',
+    fontSize: 12,
+    marginTop: 5,
+   },
+   overview:{
+    marginTop:5,
+    color:'#8697a5',
+    fontSize: 15,
+   },
+   viewRating:{
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    marginTop: 10,
+    marginBottom: 10,
+   },
   title:{
     marginTop:20,
     marginBottom:10,
     color:'#fff',
     fontSize: 30,
     textAlign: 'center',
+    borderBottomWidth:2,
+    borderBottomColor: '#8697a5',
   },
 });

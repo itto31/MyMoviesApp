@@ -14,13 +14,11 @@ export function signInApi(user) {
   };
    return fetch(url, data)
    .then((response) =>{
-    console.log(data)
     if (response.status === 200) {
       return response.json();
     }
       return { message: 'email or password is incorrect' };
   }).then((result) => {
-    console.log(result)
       return result;
     }
   ).catch((error) => {

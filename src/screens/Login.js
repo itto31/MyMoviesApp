@@ -9,12 +9,14 @@ import {signInApi} from '../api/auth';
 import { TOKEN } from '../../src/utils/constant';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {HelperText,TextInput,Surface ,Button,Text,Dialog} from 'react-native-paper';
+import LottieView from 'lottie-react-native';
 
 
 export default function Login(props) {
     const { navigation } = props;
     const [visible, setVisible] = useState(false);
     const [message, setMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const hideDialog = () => setVisible(false);
 
     useEffect(() => {
@@ -35,11 +37,6 @@ export default function Login(props) {
         });
       }, [navigation]);
 
-
-
-
-
-
     const setDate = async (token) => {
         try {
             await AsyncStorage.setItem(TOKEN, token);
@@ -54,6 +51,7 @@ export default function Login(props) {
             password: Yup.string(true).required('Password is required').min(6, 'Password must be at least 6 characters'),
         }),
         onSubmit: (formValue) => {
+            setIsLoading(true);
             signInApi(formValue).then(response =>{
                 if (response.message){
                     setVisible(true);
@@ -65,6 +63,7 @@ export default function Login(props) {
             }).catch((error) =>{
                 console.log(error);
             });
+            setIsLoading(false);
         },
     });
 
@@ -113,8 +112,13 @@ export default function Login(props) {
               <Button onPress={hideDialog}>Done</Button>
             </Dialog.Actions>
                     </Dialog>
+
+        {isLoading && (
+            <LottieView source={require('../assets/98432-loading.json')} autoPlay loop />
+        )}
     </View>
   );
+
 }
 
 const styles = StyleSheet.create({
